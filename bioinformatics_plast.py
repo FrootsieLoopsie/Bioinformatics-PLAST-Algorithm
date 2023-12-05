@@ -37,7 +37,7 @@ def lire_fichier_fasta(chemin_fichier):
 def construire_kmers(sequence, k):
     return [sequence[i:i+k] for i in range(len(sequence) - k + 1)]
 
-def rechercher__exacte_kmers(kmers, base_de_donnees):
+def rechercher_exacte_kmers(kmers, base_de_donnees):
     """ Recherche chaque k-mer dans la base de données et renvoie les HSPs initiaux. """
     HSPs = []
     for seq_id, sequence in base_de_donnees.items():
@@ -101,3 +101,29 @@ def etendre_hsp(sequence, hsp, base_de_donnees, score_match=5, score_mismatch=-4
 
     # Retourner le HSP étendu avec le meilleur score
     return seq_id, best_extension[0], best_extension[1], score_max
+
+
+#---------------------------------------------------------------------------------------
+# MERGE ALIGNED HSP MATCHES
+#
+def fusionner_hsp(hsps):
+    """ Fusionne les HSPs chevauchants. """
+    # Tri des HSPs par identifiant de séquence et position de début
+    hsps.sort(key=lambda x: (x[0], x[1]))
+    fusionnes = []
+
+    # Initialiser le premier HSP comme étant le HSP courant à comparer
+    hsp_courant = hsps[0]
+    for hsp in hsps[1:]:
+        # Vérifier si le HSP actuel et le HSP courant se chevauchent et concernent la même séquence
+        if hsp[0] == hsp_courant[0] and hsp[1] <= hsp_courant[2]:
+            # Si les HSPs se chevauchent, mettre à jour la fin du HSP courant si nécessaire
+            hsp_courant = (hsp_courant[0], hsp_courant[1], max(hsp_courant[2], hsp[2]), hsp_courant[3])
+        else:
+            # Si les HSPs ne se chevauchent pas, ajouter le HSP courant à la liste des fusionnés
+            fusionnes.append(hsp_courant)
+            hsp_courant = hsp
+
+    # Ajouter le dernier HSP courant à la liste des fusionnés
+    fusionnes.append(hsp_courant)
+    return fusionnes
