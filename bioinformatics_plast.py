@@ -6,17 +6,9 @@ import argparse
 # Par Alexandre L'Écuyer 20103530
 
 # Comment rouler ce fichier:
-#   1 - Installer les librairies, avec:
-#           pip install biopython
-#           pip install numpy
-
-#   2 - Installer le package graphviz sur l'ordi, si pas déjà fait:
-#           Ubuntu: sudo apt-get install graphviz
-#           MacOS: brew install graphviz
-#           Windows: https://stackoverflow.com/a/44005139 ou https://graphviz.org/download/
-
-#   3 - Placer reads.fq au même répertoire que ce fichier.
-#   4 - Exécuter ce fichier avec python.
+#   1 - Installer les librairies, avec: pip install biopython
+#   2 - Placer le fichier fasta au même répertoire que ce fichier.
+#   3 - Exécuter ce fichier avec python, avec les arguments valides.
 
 
 # ---------------------------------------------------------------------------------------
@@ -169,8 +161,7 @@ if __name__ == "__main__":
     parser.add_argument('-db', type=str, required=True, help='Database file in FASTA format.')
     parser.add_argument('-E', type=int, default=4, help='Extension threshold (default: 4).')
     parser.add_argument('-ss', type=float, default=1e-3, help='Significance score threshold (default: 1e-3).')
-    parser.add_argument('-seed', type=str, default='11111111111',
-                        help='Seed pattern for k-mers (default: "11111111111").')
+    parser.add_argument('-seed', type=str, default='11111111111', help='Seed pattern for k-mers (default: "11111111111").')
 
     # Parser les arguments
     args = parser.parse_args()
